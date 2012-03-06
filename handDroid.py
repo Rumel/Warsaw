@@ -32,7 +32,7 @@ fileFormats = ["mpg", "mkv", "avi", "wmv", "mp4", "flv", "mt2s", "mpeg", "mov", 
 
 def isVideoFile(ext):
 	for f in fileFormats:
-		if(ext == f):
+		if(str.lower(ext) == f):
 			return True
 	return False
 	
