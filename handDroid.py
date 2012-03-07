@@ -100,8 +100,8 @@ for f in inFiles:
 		oldFile = ".".join(splitName)
 		splitName[length] = newExt
 		newFile = ".".join(splitName)
-		if(os.path.exists(outputDir + f)):
-			None
+		if(os.path.exists(outputDir + newFile)):
+			print "File already exists"
 		else:
 			start = time.time()
 			os.system('handBrakeCLI -i "' + inputDir + oldFile + '"' + ' -o "' + outputDir + newFile +'" ' + preset)
