@@ -36,15 +36,6 @@ def isVideoFile(ext):
 			return True
 	return False
 	
-def convertTime(seconds):
- 	hours = int(seconds / 3600)
-	seconds = seconds - hours * 3600
-	minutes = int(seconds / 60)
-	seconds = seconds - minutes * 60
-	seconds = int(seconds % 60)
-	s = str(hours) + " hours " + str(minutes) + " minutes " + str(seconds) + " seconds"  
-	return s
-	
 #This function provides for more consistent formatting of the logfile	
 def addZero(num):
 	if(len(str(num)) == 1):
@@ -61,6 +52,8 @@ def timeString():
 	
 	if(t.tm_hour > 12):
 		hour = addZero(t.tm_hour - 12)
+	elif(t.tm_hour == 0):
+		hour = "12"
 	else:
 		hour = addZero(t.tm_hour)
 		
@@ -81,6 +74,37 @@ def timeString():
 		
 	return month + h + day + h + year + s + hour + c + minutes + c + seconds + s + ampm
 
+def convertTime(seconds):
+ 	hours = int(seconds / 3600)
+	seconds = seconds - hours * 3600
+	minutes = int(seconds / 60)
+	seconds = seconds - minutes * 60
+	seconds = int(seconds % 60)
+	s = addZero(hours) + " hours " + addZero(minutes) + " mins " + addZero(seconds) + " secs"  
+	return s
+	
+def humanSize(bytes):
+	gb = 1073741824.0
+	mb = 1048576.0
+	kb = 1024.0
+	if(bytes > gb):
+		left = int(bytes/gb)
+		bytes = bytes - left * gb
+		percent = round((bytes/gb), 2)
+		return str(percent + left) + " GB"
+	elif(bytes > mb):
+		left = int(bytes/mb)
+		bytes = bytes - left * mb
+		percent = round((bytes/mb), 2)
+		return str(percent + left) + " MB"
+	elif(bytes > kb):
+		left = int(bytes/kb)
+		bytes = bytes - left * kb
+		percent = round((bytes/kb), 1)
+		return str(percent + left) + " KB"
+	else:
+		return str(bytes) + " B"
+	
 if(os.path.exists(inputDir) == False):
 	print "Input directory doesn't exist"
 	exit()
@@ -103,10 +127,13 @@ for f in inFiles:
 		if(os.path.exists(outputDir + newFile)):
 			print "File already exists"
 		else:
+			oldSize = os.path.getsize(inputDir+oldFile)
 			start = time.time()
 			os.system('handBrakeCLI -i "' + inputDir + oldFile + '"' + ' -o "' + outputDir + newFile +'" ' + preset)
 			end = time.time()
 			total = end - start
+			newSize = os.path.getsize(outputDir+newFile)
+			comprSize = str(round((float(newSize)/float(oldSize)), 2))
 			log = open(logFile, 'a')
-			log.write(timeString() + " " + convertTime(total) + "\n")
+			log.write(timeString() + " " + convertTime(total) + "\t" + humanSize(oldSize) + " " + humanSize(newSize) + " " + comprSize + "\n")
 			log.close()
