@@ -1,9 +1,6 @@
 #!/usr/bin/python
 #python 2.7.2
 
-#This script relies on HandBrakeCLI being in your PATH variable
-#If you don't want it in your path just go and change it in the conversion string
-
 import os
 import time
 import datetime
@@ -17,7 +14,7 @@ outputDir = ""
 #Specify the Handbrake preset here
 #Example:
 # '--preset "Android High"'
-preset = ''
+preset = ""
 
 #Specify where you want the logfile
 # use the \\ syntax
@@ -25,7 +22,7 @@ logFile = ""
 
 #What the new extension will be. It probably should be "mkv" or "m4v". Note that
 # no period is needed
-newExt = "m4v"
+newExt = ""
 
 #List of video formats. This list is pretty small at the moment.
 fileFormats = ["mpg", "mkv", "avi", "wmv", "mp4", "flv", "mt2s", "mpeg", "mov", "f4v" ]
@@ -35,6 +32,89 @@ def isVideoFile(ext):
 		if(str.lower(ext) == f):
 			return True
 	return False
+	
+def isValidDir(directory):
+	if(os.path.exists(directory) and os.path.isdir(directory)):
+		return True
+	else:
+		return False
+
+#Formats the directory string to how I want it (to have a trailing '\')
+def trailingSlash(directory):
+	directory = directory.replace("\n", "")
+	if(directory[len(directory) - 1] != "\\"):
+		return directory + "\\"
+	else:
+		return directory
+
+def menu():
+	x = True
+	while(x):
+		print "Where is the input directory?"
+		console = raw_input()
+		if(isValidDir(trailingSlash(console))):
+			inputDir = trailingSlash(console)
+			x = False
+	x = True
+	while(x):
+		print "Where is the output directory?"
+		console = raw_input()
+		if(isValidDir(trailingSlash(console))):
+			inputDir = trailingSlash(console)
+			x = False
+	x = True
+	print "Where would you like the log file?"
+	console = raw_input()
+	logFile = console
+	print "Where would you like the log file?"
+	console = raw_input()
+	newExt = console
+	print "What is the preset?"
+	console = raw_input()
+	preset = console
+	return		
+		
+def buildSettings(settings):
+	for s in settings:
+		if(s[0] == "InputDirectory"):
+			if(isValidDir(trailingSlash(s[1])) == True):
+				global inputDir
+				inputDir = trailingSlash(s[1])
+			else:
+				None
+		elif(s[0] == "OutputDirectory"):
+			if(isValidDir(trailingSlash(s[1])) == True):
+				global outputDir
+				outputDir = trailingSlash(s[1])
+			else:
+				None
+		elif(s[0] == "LogFile"):
+			global logFile
+			logFile = s[1]
+		elif(s[0] == "Preset"):
+			global preset
+			preset = s[1]
+		elif(s[0] == "Extension"):
+			global newExt
+			newExt = s[1]
+		else:
+			None
+
+	return
+	
+#Read from settings file, if wrong or non existent builds new settings file	
+#Implement menu via if-elif-else statements
+def readSettingsFile():
+	if(os.path.exists(os.path.dirname(__file__) + "\\handdroid.settings")):
+		f = open(os.path.dirname(__file__) + "\\handdroid.settings")
+		settings = []
+		for line in f:
+			if(len(line.split("=")) == 2):
+				settings.append(line.split("="))
+		buildSettings(settings)
+	else:
+		menu()
+	return
 	
 #This function provides for more consistent formatting of the logfile	
 def addZero(num):
@@ -104,7 +184,17 @@ def humanSize(bytes):
 		return str(percent + left) + " KB"
 	else:
 		return str(bytes) + " B"
-	
+
+##############################################################
+#															 #
+#															 #
+#			    Start of program logic here					 #
+#															 #
+#															 #
+##############################################################
+		
+readSettingsFile()
+		
 if(os.path.exists(inputDir) == False):
 	print "Input directory doesn't exist"
 	exit()
@@ -116,6 +206,7 @@ inFiles = os.listdir(inputDir)
 outFiles = os.listdir(outputDir)
 
 #Cycles through files and converts them
+converted = 0
 for f in inFiles:
 	splitName = f.split('.')
 	length = len(splitName) - 1
@@ -137,3 +228,9 @@ for f in inFiles:
 			log = open(logFile, 'a')
 			log.write(timeString() + " " + convertTime(total) + "\t" + humanSize(oldSize) + " " + humanSize(newSize) + " " + comprSize + "\n")
 			log.close()
+			converted = converted + 1
+
+if(converted == 1):
+	print "Converted 1 file"
+else:
+	print "Converted " + str(converted) + " files"
