@@ -186,11 +186,11 @@ def humanSize(bytes):
 		return str(bytes) + " B"
 
 ##############################################################
-#															 #
-#															 #
-#			    Start of program logic here					 #
-#															 #
-#															 #
+#                                                            #
+#                                                            #
+#                 Start of program logic here                #
+#                                                            #
+#                                                            #
 ##############################################################
 		
 readSettingsFile()
