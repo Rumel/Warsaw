@@ -90,7 +90,7 @@ def buildSettings(settings):
 				None
 		elif(s[0] == "LogFile"):
 			global logFile
-			logFile = s[1]
+			logFile = s[1].replace("\n", "")
 		elif(s[0] == "Preset"):
 			global preset
 			preset = s[1]
@@ -185,13 +185,9 @@ def humanSize(bytes):
 	else:
 		return str(bytes) + " B"
 
-##############################################################
-#                                                            #
-#                                                            #
-#                 Start of program logic here                #
-#                                                            #
-#                                                            #
-##############################################################
+###############################
+##Start of program logic here##
+###############################
 		
 readSettingsFile()
 		
