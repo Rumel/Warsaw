@@ -97,10 +97,10 @@ def buildSettings(settings):
 			logFile = s[1].replace("\n", "")
 		elif(s[0] == "Preset"):
 			global preset
-			preset = s[1]
+			preset = s[1].replace("\n", "")
 		elif(s[0] == "Extension"):
 			global newExt
-			newExt = s[1]
+			newExt = s[1].replace("\n", "")
 		else:
 			None
 
