@@ -38,6 +38,10 @@ def isValidDir(directory):
 		return True
 	else:
 		return False
+		
+def makeDirs(directory):
+	os.makedirs(directory)
+	return
 
 #Formats the directory string to how I want it (to have a trailing '\')
 def trailingSlash(directory):
