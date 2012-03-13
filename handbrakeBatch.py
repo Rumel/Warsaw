@@ -120,6 +120,20 @@ def readSettingsFile():
 		menu()
 	return
 	
+def writeSettingsFile():
+	global inputDir
+	global outputDir
+	global preset
+	global logFile
+	global newExt
+	f = open(os.path.dirname(__file__) + "\\handdroid.settings", 'w')
+	f.write("InputDirectory=" + inputDir + "\n")
+	f.write("OutputDirectory=" + outputDir + "\n")
+	f.write("Preset=" + preset + "\n")
+	f.write("LogFile=" + logFile + "\n")
+	f.write("Extension=" + newExt + "\n")
+	return
+	
 #This function provides for more consistent formatting of the logfile	
 def addZero(num):
 	if(len(str(num)) == 1):
@@ -201,6 +215,8 @@ if(os.path.exists(inputDir) == False):
 if(os.path.exists(outputDir) == False):
 	print "Output directory doesn't exist"
 	exit()
+	
+writeSettingsFile()
 	
 inFiles = os.listdir(inputDir)
 outFiles = os.listdir(outputDir)
