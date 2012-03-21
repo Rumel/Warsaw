@@ -9,5 +9,3 @@ It then checks if it's a video file.
 After that it checks to see if it already exists in the output directory.
 If it doesn't it converts it and then writes to a logfile.
 If it already exists it just skips it and moves on to the next file.
-
-Change
