@@ -217,34 +217,36 @@ if(os.path.exists(outputDir) == False):
 	exit()
 	
 writeSettingsFile()
-	
-inFiles = os.listdir(inputDir)
-outFiles = os.listdir(outputDir)
 
 #Cycles through files and converts them
-converted = 0
-for f in inFiles:
-	splitName = f.split('.')
-	length = len(splitName) - 1
-	oldExt = splitName[length]
-	if(isVideoFile(oldExt)):
-		oldFile = ".".join(splitName)
-		splitName[length] = newExt
-		newFile = ".".join(splitName)
-		if(os.path.exists(outputDir + newFile)):
-			print "File already exists"
-		else:
-			oldSize = os.path.getsize(inputDir+oldFile)
-			start = time.time()
-			os.system('handBrakeCLI -i "' + inputDir + oldFile + '"' + ' -o "' + outputDir + newFile +'" ' + preset)
-			end = time.time()
-			total = end - start
-			newSize = os.path.getsize(outputDir+newFile)
-			comprSize = str(round((float(newSize)/float(oldSize)), 2))
-			log = open(logFile, 'a')
-			log.write(timeString() + " " + convertTime(total) + "\t" + humanSize(oldSize) + " " + humanSize(newSize) + " " + comprSize + "\n")
-			log.close()
-			converted = converted + 1
+while(True):
+	inFiles = os.listdir(inputDir)
+	outFiles = os.listdir(outputDir)
+	converted = 0
+	for f in inFiles:
+		splitName = f.split('.')
+		length = len(splitName) - 1
+		oldExt = splitName[length]
+		if(isVideoFile(oldExt)):
+			oldFile = ".".join(splitName)
+			splitName[length] = newExt
+			newFile = ".".join(splitName)
+			if(os.path.exists(outputDir + newFile)):
+				print "File already exists"
+			else:
+				oldSize = os.path.getsize(inputDir+oldFile)
+				start = time.time()
+				os.system('handBrakeCLI -i "' + inputDir + oldFile + '"' + ' -o "' + outputDir + newFile +'" ' + preset)
+				end = time.time()
+				total = end - start
+				newSize = os.path.getsize(outputDir+newFile)
+				comprSize = str(round((float(newSize)/float(oldSize)), 2))
+				log = open(logFile, 'a')
+				log.write(timeString() + " " + convertTime(total) + "\t" + humanSize(oldSize) + " " + humanSize(newSize) + " " + comprSize + "\n")
+				log.close()
+				converted = converted + 1
+	if(converted == 0):
+		break
 
 if(converted == 1):
 	print "Converted 1 file"
