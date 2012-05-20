@@ -178,7 +178,9 @@ def convertTime(seconds):
 	minutes = int(seconds / 60)
 	seconds = seconds - minutes * 60
 	seconds = int(seconds % 60)
-	s = addZero(hours) + " hours " + addZero(minutes) + " mins " + addZero(seconds) + " secs"  
+	#Old
+	#s = addZero(hours) + " hours " + addZero(minutes) + " mins " + addZero(seconds) + " secs"
+	s = addZero(hours) + "." + addZero(minutes) + "." + addZero(seconds) 
 	return s
 	
 def humanSize(bytes):
@@ -189,19 +191,19 @@ def humanSize(bytes):
 		left = int(bytes/gb)
 		bytes = bytes - left * gb
 		percent = round((bytes/gb), 2)
-		return str(percent + left) + " GB"
+		return "%6s GB" % str(percent + left)
 	elif(bytes > mb):
 		left = int(bytes/mb)
 		bytes = bytes - left * mb
 		percent = round((bytes/mb), 2)
-		return str(percent + left) + " MB"
+		return "%6s MB" % str(percent + left)
 	elif(bytes > kb):
 		left = int(bytes/kb)
 		bytes = bytes - left * kb
 		percent = round((bytes/kb), 1)
-		return str(percent + left) + " KB"
+		return "%6s KB" % str(percent + left)
 	else:
-		return str(bytes) + " B"
+		return "%6s B" % str(bytes)
 
 ###############################
 ##Start of program logic here##
@@ -219,10 +221,11 @@ if(os.path.exists(outputDir) == False):
 writeSettingsFile()
 
 #Cycles through files and converts them
+totalConverted = 0
 while(True):
 	inFiles = os.listdir(inputDir)
 	outFiles = os.listdir(outputDir)
-	converted = 0
+	currentConverted = 0
 	for f in inFiles:
 		splitName = f.split('.')
 		length = len(splitName) - 1
@@ -240,15 +243,23 @@ while(True):
 				end = time.time()
 				total = end - start
 				newSize = os.path.getsize(outputDir+newFile)
-				comprSize = str(round((float(newSize)/float(oldSize)), 2))
+				comprSize = "%3s%%" % str(round((float(newSize)/float(oldSize)), 3) * 100)
 				log = open(logFile, 'a')
-				log.write(timeString() + " " + convertTime(total) + "\t" + humanSize(oldSize) + " " + humanSize(newSize) + " " + comprSize + "\n")
+				log.write("%s  %s %s %s %s\n" % (timeString(), convertTime(total), humanSize(oldSize), humanSize(newSize), comprSize))
 				log.close()
-				converted = converted + 1
-	if(converted == 0):
+				currentConverted = currentConverted + 1
+				totalConverted = totalConverted + 1
+	if(currentConverted == 0):
 		break
 
-if(converted == 1):
+if(totalConverted == 1):
 	print "Converted 1 file"
+	log = open(logFile, 'a')
+	log.write("Converted 1 file\n\n")
+	log.close()
 else:
-	print "Converted " + str(converted) + " files"
+	print "Converted " + str(totalConverted) + " files"
+	if(totalConverted != 0):
+		log = open(logFile, 'a')
+		log.write("Converted " + str(totalConverted) + " files\n\n")
+		log.close()
