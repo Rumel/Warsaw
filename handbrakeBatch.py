@@ -7,23 +7,18 @@ import datetime
 
 #This is where the script should look for files
 inputDir = ""
-
 #It will output files here
 outputDir = ""
-
 #Specify the Handbrake preset here
 #Example:
 # '--preset "Android High"'
 preset = ""
-
 #Specify where you want the logfile
 # use the \\ syntax
 logFile = ""
-
 #What the new extension will be. It probably should be "mkv" or "m4v". Note that
 # no period is needed
 newExt = ""
-
 #List of video formats. This list is pretty small at the moment.
 fileFormats = ["mpg", "mkv", "avi", "wmv", "mp4", "flv", "mt2s", "mpeg", "mov", "f4v" ]
 
@@ -77,62 +72,6 @@ def menu():
 	console = raw_input()
 	preset = console
 	return		
-		
-def buildSettings(settings):
-	for s in settings:
-		if(s[0] == "InputDirectory"):
-			if(isValidDir(trailingSlash(s[1])) == True):
-				global inputDir
-				inputDir = trailingSlash(s[1])
-			else:
-				None
-		elif(s[0] == "OutputDirectory"):
-			if(isValidDir(trailingSlash(s[1])) == True):
-				global outputDir
-				outputDir = trailingSlash(s[1])
-			else:
-				None
-		elif(s[0] == "LogFile"):
-			global logFile
-			logFile = s[1].replace("\n", "")
-		elif(s[0] == "Preset"):
-			global preset
-			preset = s[1].replace("\n", "")
-		elif(s[0] == "Extension"):
-			global newExt
-			newExt = s[1].replace("\n", "")
-		else:
-			None
-
-	return
-	
-#Read from settings file, if wrong or non existent builds new settings file	
-#Implement menu via if-elif-else statements
-def readSettingsFile():
-	if(os.path.exists(os.path.dirname(__file__) + "\\handdroid.settings")):
-		f = open(os.path.dirname(__file__) + "\\handdroid.settings")
-		settings = []
-		for line in f:
-			if(len(line.split("=")) == 2):
-				settings.append(line.split("="))
-		buildSettings(settings)
-	else:
-		menu()
-	return
-	
-def writeSettingsFile():
-	global inputDir
-	global outputDir
-	global preset
-	global logFile
-	global newExt
-	f = open(os.path.dirname(__file__) + "\\handdroid.settings", 'w')
-	f.write("InputDirectory=" + inputDir + "\n")
-	f.write("OutputDirectory=" + outputDir + "\n")
-	f.write("Preset=" + preset + "\n")
-	f.write("LogFile=" + logFile + "\n")
-	f.write("Extension=" + newExt + "\n")
-	return
 	
 #This function provides for more consistent formatting of the logfile	
 def addZero(num):
@@ -209,16 +148,12 @@ def humanSize(bytes):
 ##Start of program logic here##
 ###############################
 		
-readSettingsFile()
-		
 if(os.path.exists(inputDir) == False):
 	print "Input directory doesn't exist"
 	exit()
 if(os.path.exists(outputDir) == False):
 	print "Output directory doesn't exist"
 	exit()
-	
-writeSettingsFile()
 
 #Cycles through files and converts them
 totalConverted = 0
