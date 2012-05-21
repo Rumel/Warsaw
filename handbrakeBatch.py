@@ -21,6 +21,8 @@ logFile = ""
 newExt = ""
 #List of video formats. This list is pretty small at the moment.
 fileFormats = ["mpg", "mkv", "avi", "wmv", "mp4", "flv", "mt2s", "mpeg", "mov", "f4v" ]
+#Location of HandbrakeCLI.exe
+handBrake = ""
 
 def isVideoFile(ext):
 	for f in fileFormats:
@@ -147,7 +149,7 @@ while(True):
 			else:
 				oldSize = os.path.getsize(inputDir+oldFile)
 				start = time.time()
-				os.system('handBrakeCLI -i "' + inputDir + oldFile + '"' + ' -o "' + outputDir + newFile +'" ' + preset)
+				os.system(handBrake + ' -i "' + inputDir + oldFile + '"' + ' -o "' + outputDir + newFile +'" ' + preset)
 				end = time.time()
 				total = end - start
 				newSize = os.path.getsize(outputDir+newFile)
