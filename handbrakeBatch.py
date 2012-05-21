@@ -45,33 +45,6 @@ def trailingSlash(directory):
 		return directory + "\\"
 	else:
 		return directory
-
-def menu():
-	x = True
-	while(x):
-		print "Where is the input directory?"
-		console = raw_input()
-		if(isValidDir(trailingSlash(console))):
-			inputDir = trailingSlash(console)
-			x = False
-	x = True
-	while(x):
-		print "Where is the output directory?"
-		console = raw_input()
-		if(isValidDir(trailingSlash(console))):
-			inputDir = trailingSlash(console)
-			x = False
-	x = True
-	print "Where would you like the log file?"
-	console = raw_input()
-	logFile = console
-	print "Where would you like the log file?"
-	console = raw_input()
-	newExt = console
-	print "What is the preset?"
-	console = raw_input()
-	preset = console
-	return		
 	
 #This function provides for more consistent formatting of the logfile	
 def addZero(num):
