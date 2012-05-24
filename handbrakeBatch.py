@@ -1,5 +1,4 @@
-#!/usr/bin/python
-#python 2.7.2
+#Written and tested with python 2.7.3
 
 import os
 import time
