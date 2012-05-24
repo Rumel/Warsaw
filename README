@@ -1,11 +1,8 @@
 This is a script I wrote to do batch conversion of video files through handbrake.
 
-You need to go into the script and change the top variables and you also need to have
-HandBrakeCLI in your PATH variable. If you don't want to do that you can change it in
-the conversion string.
+To have this script run properly you need to go into the script and change the top variables.
 
-The script works by reading files from an input directory.
-It then checks if it's a video file.
-After that it checks to see if it already exists in the output directory.
-If it doesn't it converts it and then writes to a logfile.
-If it already exists it just skips it and moves on to the next file.
+The script reads in a directory of files, and then converts it based on the extensions
+you have supplied to it. It iterates through the files and then will do another check
+to see if any new files have been added to the directory. If there has been it continues
+running otherwise the program terminates. The program also writes to a logfile.
